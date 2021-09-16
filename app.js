@@ -5,47 +5,74 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable arrow-body-style */
 /* eslint-disable brace-style */
-const removeDuplicates = require('./removeDuplicates');
 
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-// import the database:
-const unitedStatesData = require('./StateData');
-const { restart } = require('nodemon');
+const helmet = require('helmet');
 
+// ^ helper functions
+const removeDuplicates = require('./removeDuplicates');
+
+// ^ import the database:
+const unitedStatesData = require('./StateData');
+
+// ^ establish the Express server
 const app = express();
-app.use(morgan('dev')); // logging requests in the console
+
+// ^ determine morgan logging dependent on node environment mode
+const morganOption = process.env.NODE_ENV === 'production' ? 'tiny' : 'common';
+
+app.use(morgan(morganOption)); // logging requests in the console
 app.use(cors()); // allows cross origin requests
+app.use(helmet()); // provides some security to headers
+
+// ^ validation middleware
+const validateBearerToken = (req, res, next) => {
+  const authToken = req.get('Authorization'); // the token from the client
+  const apiToken = process.env.API_TOKEN; // the token stored in the .env file
+
+  // compare the two tokens - if no match then return 401 unauthorized request response
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    return res.status(401).json({ error: 'Unauthorized Request' });
+  }
+
+  // move to the next middleware
+  next();
+};
+
+// ^ use middleware
+app.use(validateBearerToken);
 
 // ^ greeting message
 app.get('/', (req, res) => res.send('hello, usa'));
 
 // ^ get all states data, narrow by search, sort by name or date founded
 app.get('/states', (req, res) => {
-  // search query
+  // ? search query
   const { search = '', sort } = req.query;
 
-  // validate the sort, it can only be 'name' or 'founded'
+  // ? validate the sort, it can only be 'name' or 'founded'
   if (sort) {
     if (!['name', 'founded'].includes(sort)) {
       return res.status(400).send('Sort must be one of name or founded');
     }
   }
 
-  // narrow search
+  // ? narrow search
   const searchResults = unitedStatesData.filter((state) =>
     state.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // if sort exists and is validated, sort the search results
+  // ? if sort exists and is validated, sort the search results
   if (sort) {
     searchResults.sort((a, b) =>
       a[sort] > b[sort] ? 1 : a[sort] < b[sort] ? -1 : 0
     );
   }
 
-  // final result
+  // ? final result
   res.status(200).json(searchResults);
 });
 
@@ -141,7 +168,7 @@ app.get('/state/:state', getState);
 
 // ^ Get flowers
 
-// Make an array of flower objects removing duplicates
+// ? Make an array of flower objects removing duplicates
 const generateFlowerArray = (data) => {
   const a_addFlowerId = data.map((state) => {
     const flowerObject = state.flower;

@@ -13,11 +13,22 @@
 `touch .gitignore`
 `echo "node_modules" > .gitignore`
 
+# env variables
+
+`touch .env` --> Make new hidden env file
+`echo ".env" >> .gitignore` --> add the .env file to the .gitignore list
+
+- store the API token in your env file:
+  `API_TOKEN=put-your-token-here`
+
+- install dotenv
+  `npm install dotenv`
+
 # Access local server at:
 
 `http://localhost:8080/`
 
-Endpoints:
+# Endpoints:
 
 `GET '/' `--> Greeting message
 

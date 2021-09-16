@@ -1,2 +1,0 @@
-Hello, I am a text file.
-Please download me from the server.
