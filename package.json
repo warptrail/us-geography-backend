@@ -1,0 +1,59 @@
+{
+  "name": "states",
+  "version": "1.0.0",
+  "description": "express api to access geographical information about the 50 states of the USA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon app"
+  },
+  "author": "warptrail",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "nodemon": "^2.0.12"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "env": {
+      "es6": true,
+      "browser": true
+    },
+    "rules": {
+      "brace-style": [
+        "off",
+        "stroustrup"
+      ],
+      "comma-dangle": [
+        "off"
+      ],
+      "no-nested-ternary": "off",
+      "no-confusing-arrow": "off",
+      "implicit-arrow-linebreak": "off",
+      "function-paren-newline": "off",
+      "no-trailing-spaces": "off",
+      "no-multiple-empty-lines": "off",
+      "padded-blocks": "off",
+      "no-empty": "off",
+      "prefer-const": "warn",
+      "consistent-return": "off",
+      "no-unused-vars": [
+        "warn"
+      ],
+      "no-var": [
+        "off"
+      ],
+      "one-var": [
+        "off"
+      ]
+    }
+  }
+}
