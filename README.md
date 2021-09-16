@@ -24,6 +24,18 @@
 - install dotenv
   `npm install dotenv`
 
+# testing
+
+`npm install mocha chai supertest -D`
+
+- Modify package.json env to include mocha and chai for eslint and include the test script
+
+# Winston
+
+`npm install winston`
+
+- For logging purposes
+
 # Access local server at:
 
 `http://localhost:8080/`

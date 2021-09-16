@@ -1,2 +1,5 @@
+Icon
+.vscode
 node_modules
 .env
+*.log
