@@ -36,6 +36,12 @@
 
 - For logging purposes
 
+# uuid
+
+- Need to generate a unique id when making post requests
+
+  `npm install uuid`
+
 # Access local server at:
 
 `http://localhost:8080/`

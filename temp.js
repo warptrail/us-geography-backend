@@ -2,7 +2,7 @@
 const removeDuplicates = require('./removeDuplicates');
 
 // ^ import the database:
-const unitedStatesData = require('./StateData');
+const USA_DATA = require('./src/data/usa-data');
 
 // ^ validation middleware
 const validateBearerToken = (req, res, next) => {
@@ -37,7 +37,7 @@ app.get('/states', (req, res) => {
   }
 
   // ? narrow search
-  const searchResults = unitedStatesData.filter((state) =>
+  const searchResults = USA_DATA.filter((state) =>
     state.name.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -63,13 +63,13 @@ const getStateNames = (req, res) => {
   }
 
   if (!sort || sort === 'name') {
-    const stateNames = unitedStatesData.map((state) => {
+    const stateNames = USA_DATA.map((state) => {
       const stateObj = { name: state.name, founded: state.founded };
       return stateObj;
     });
     res.status(200).json(stateNames);
   } else if (sort === 'founded') {
-    const stateNamesSortByFounded = unitedStatesData.map((state) => {
+    const stateNamesSortByFounded = USA_DATA.map((state) => {
       const stateObj = { name: state.name, founded: state.founded };
       return stateObj;
     });
@@ -98,41 +98,39 @@ app.get('/state', (req, res) => {
 const getState = (req, res) => {
   const stateParam = req.params.state;
 
-  const nameArray = unitedStatesData.map((state, i) => {
+  // make an array of each state name to lowercase and remove spaces
+  const nameArray = USA_DATA.map((state, i) => {
     return state.name.toLowerCase().replace(/\s+/g, '');
   });
 
-  // add admitted to union data based off of founded value
-  const changeDataA = () => {
-    const sortedStates = unitedStatesData.sort((a, b) =>
-      a.founded > b.founded ? 1 : a.founded < b.founded ? -1 : 0
-    );
-
-    const addAdmittedValue = sortedStates.map((state, i) => {
-      const updateStateObj = { ...state, admitted: i };
-      return updateStateObj;
-    });
-  };
-
-  const modifiedUsDataA = unitedStatesData.map((state, i) => {
+  // create new object for each state and add each corresponding
+  // index to the object as an id
+  const modifiedUsDataA = USA_DATA.map((state, i) => {
     const addId = { ...state, id: nameArray[i] };
     return addId;
   });
 
+  // sort each state by when it was founded
   const modifiedUsDataB = modifiedUsDataA.sort((a, b) =>
     a.founded > b.founded ? 1 : a.founded < b.founded ? -1 : 0
   );
 
+  // with the previous sorted array, set the admitted property
+  // as its own index + 1
   const modifiedUsDataC = modifiedUsDataB.map((s, i) => {
     const o = { ...s, admitted: i + 1 };
     return o;
   });
 
+  // if incorrect state is entered in parameter then throw an error
   if (!nameArray.includes(stateParam.toLowerCase())) {
-    return res.status(400).json({ error: 'cannot find state', code: '304s' });
+    return res.status(400).json({ error: 'cannot find state' });
   }
 
+  // find the state that matches the parameter
   const stateResponse = modifiedUsDataC.find((s) => s.id === stateParam);
+  // tag on state symbol ids
+  // todo fix this to use the property name as a value on the front end
   Object.assign(stateResponse.flower, { id: 'flower' });
   Object.assign(stateResponse.tree, { id: 'tree' });
   Object.assign(stateResponse.mineral, { id: 'mineral' });
@@ -161,13 +159,13 @@ const generateFlowerArray = (data) => {
   return returnArray;
 };
 const getFlowers = (req, res) => {
-  const flowerData = generateFlowerArray(unitedStatesData);
+  const flowerData = generateFlowerArray(USA_DATA);
   return res.json(flowerData);
 };
 
 const getFlower = (req, res) => {
   const flowerParam = req.params.flower;
-  const flowerData = generateFlowerArray(unitedStatesData);
+  const flowerData = generateFlowerArray(USA_DATA);
 
   const flowerObject = flowerData.find((flower) => flower.id === flowerParam);
 
