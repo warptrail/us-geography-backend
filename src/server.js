@@ -1,6 +1,10 @@
 const app = require('./app');
-const { PORT } = require('./config');
+const { PORT, NODE_ENV } = require('./config');
+
+const portOption = NODE_ENV === 'production' ? false : true;
 
 app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  if (portOption) {
+    console.log(`Server listening at http://localhost:${PORT}`);
+  }
 });

@@ -12,6 +12,9 @@
   },
   "author": "warptrail",
   "license": "ISC",
+  "engines": {
+    "node": "14.16.0"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dayjs": "^1.10.7",
