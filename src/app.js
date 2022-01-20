@@ -25,10 +25,14 @@ app.get('/download', (req, res) => {
   res.download(file);
 });
 
+app.get('/download/resume', (req, res) => {
+  const file = `${__dirname}/download/whitmore_ryan_resume.pdf`;
+});
+
 app.use(validateBearerToken);
 
 app.get('/', (req, res) => {
-  res.send('Hello, world!');
+  res.json({ status: true });
 });
 
 app.use(usaRouter);
