@@ -27,6 +27,7 @@ app.get('/download', (req, res) => {
 
 app.get('/download/resume', (req, res) => {
   const file = `${__dirname}/download/whitmore_ryan_resume.pdf`;
+  res.download(file);
 });
 
 app.use(validateBearerToken);
